@@ -17,8 +17,11 @@ export default function AuditSidebar({ selectedSlotId, onSelect }: SidebarProps)
           <SidebarGroupContent>
             <SidebarMenu>
               {slotAudits.map((slot) => (
-                <SidebarMenuItem key={slot.slotId} active={selectedSlotId === slot.slotId}>
-                  <SidebarMenuButton asChild>
+                <SidebarMenuItem key={slot.slotId}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={selectedSlotId === slot.slotId}
+                  >
                     <button
                       aria-label={`Select slot ${slot.slotId}`}
                       className="flex items-center w-full gap-2"
