@@ -1,5 +1,5 @@
 
-import { SlotAudit } from "@/mock/auditData";
+import { SlotAudit } from "@/types/auditTypes";
 import { useState } from "react";
 import { Check, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,8 @@ export default function SlotAuditCard({ slot, onAudit, audited }: SlotAuditCardP
     });
   };
 
+  if (!slot) return null;
+
   return (
     <div className="w-full max-w-xl mx-auto p-5 rounded-xl bg-white shadow flex flex-col gap-3 border border-gray-100 animate-fade-in">
       <h2 className="text-2xl font-semibold flex gap-2 items-center">
@@ -45,7 +47,7 @@ export default function SlotAuditCard({ slot, onAudit, audited }: SlotAuditCardP
           </span>
         )}
       </h2>
-      <div className="grid grid-cols-2 gap-3 bg-gray-50 rounded-md p-3 border border-gray-200">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-gray-50 rounded-md p-3 border border-gray-200">
         <div>
           <div className="font-semibold text-gray-600 mb-2">WMS (Expected)</div>
           <div className="space-y-1 text-gray-700 text-sm">

@@ -1,28 +1,33 @@
 
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupLabel, SidebarGroupContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { AlertTriangle, Check, FileText } from "lucide-react";
-import { slotAudits } from "@/mock/auditData";
+import { SlotAudit } from "@/types/auditTypes";
 
 interface SidebarProps {
+  slots: SlotAudit[];
   selectedSlotId: string;
   onSelect: (slotId: string) => void;
+  stats: {
+    total: number;
+    audited: number;
+    withDiscrepancy: number;
+    noDiscrepancy: number;
+    percentComplete: number;
+  };
 }
 
-function countStatus(status: "discrepancy" | "no-discrepancy" | "audited") {
-  return slotAudits.filter(slot => slot.status === status).length;
-}
-
-export default function AuditSidebar({ selectedSlotId, onSelect }: SidebarProps) {
+export default function AuditSidebar({ slots, selectedSlotId, onSelect, stats }: SidebarProps) {
   return (
     <Sidebar className="h-full min-h-screen border-r border-gray-100 bg-gray-50 w-[220px]">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="flex items-center gap-3 justify-between">
             <span>Slots</span>
+            <span className="text-xs text-gray-500">{stats.audited}/{stats.total}</span>
           </SidebarGroupLabel>
-          <SidebarGroupContent>
+          <SidebarGroupContent className="max-h-[calc(100vh-180px)] overflow-y-auto">
             <SidebarMenu>
-              {slotAudits.map((slot) => (
+              {slots.map((slot) => (
                 <SidebarMenuItem key={slot.slotId}>
                   <SidebarMenuButton
                     asChild
@@ -54,22 +59,28 @@ export default function AuditSidebar({ selectedSlotId, onSelect }: SidebarProps)
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
-            <div className="mt-4 space-y-1 text-xs text-gray-500">
-              <div>
-                <Check className="inline-block w-3 h-3 mr-1 text-green-500" />
-                Audited: <b>{countStatus("audited")}</b>
-              </div>
-              <div>
-                <AlertTriangle className="inline-block w-3 h-3 mr-1 text-orange-500" />
-                Discrepancy: <b>{countStatus("discrepancy")}</b>
-              </div>
-              <div>
-                <FileText className="inline-block w-3 h-3 mr-1 text-gray-400" />
-                Clear: <b>{countStatus("no-discrepancy")}</b>
-              </div>
-            </div>
           </SidebarGroupContent>
         </SidebarGroup>
+        <div className="mt-4 p-3 bg-white rounded-md shadow-sm">
+          <h3 className="font-medium text-sm mb-2">Audit Summary</h3>
+          <div className="space-y-1 text-xs text-gray-500">
+            <div>
+              <Check className="inline-block w-3 h-3 mr-1 text-green-500" />
+              Audited: <b>{stats.audited}</b>
+            </div>
+            <div>
+              <AlertTriangle className="inline-block w-3 h-3 mr-1 text-orange-500" />
+              Discrepancy: <b>{stats.withDiscrepancy}</b>
+            </div>
+            <div>
+              <FileText className="inline-block w-3 h-3 mr-1 text-gray-400" />
+              Clear: <b>{stats.noDiscrepancy}</b>
+            </div>
+            <div className="pt-2 text-violet-600 font-medium">
+              {stats.percentComplete}% Complete
+            </div>
+          </div>
+        </div>
       </SidebarContent>
     </Sidebar>
   );
